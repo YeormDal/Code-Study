@@ -1,23 +1,36 @@
-model = RNN(1, 1, 50, 2390)
-loss_fn = nn.MSELoss()
-optimizer = optim.SGD(model.parameters(), lr=0.005)
-epoch = 100
+model = RNN(1, 1, 50, 2390)  # 입력 크기 1, 출력 크기 1, 숨겨진 크기 50, 시퀀스 길이 2390인 RNN 모델을 생성한다.
+loss_fn = nn.MSELoss()  # 손실 함수로 평균 제곱 오차(MSE)를 사용한다.
+optimizer = optim.SGD(model.parameters(), lr=0.005)  # 확률적 경사 하강법(SGD)으로 모델의 매개변수를 최적화하며, 학습률은 0.005로 설정한다.
+epoch = 100  # 총 100번의 에포크(반복)를 설정한다.
 
-for i in range(epoch):
-    model.train()
-    model.zero_grad()
-    optimizer.zero_grad()
+for i in range(epoch):  # 설정된 에포크 동안 학습을 반복한다.
+    model.train()  # 모델을 학습 모드로 전환한다.
+    model.zero_grad()  # 모델의 모든 기울기를 0으로 초기화한다.
+    optimizer.zero_grad()  # 옵티마이저의 기울기를 0으로 초기화한다.
     
-    model.hidden = model.init_hidden()
+    model.hidden = model.init_hidden()  # 숨겨진 상태를 초기화한다.
     
-    for x in X:
-        x = torch.Tensor(x).float()
-        y_true = torch.Tensor(y_true).float()
+    for x in X:  # 입력 데이터 X의 각 시퀀스에 대해 반복한다.
+        x = torch.Tensor(x).float()  # numpy 배열을 파이토치 텐서로 변환하고 float 타입으로 캐스팅한다.
+        y_true = torch.Tensor(y_true).float()  # 실제 라벨 y_true도 텐서로 변환하고 float 타입으로 캐스팅한다.
 
-        y_pred, hidden = model(x)
-        model.hidden = hidden
+        y_pred, hidden = model(x)  # 모델을 통해 예측값 y_pred와 업데이트된 숨겨진 상태 hidden을 얻는다.
+        model.hidden = hidden  # 업데이트된 숨겨진 상태를 모델에 저장한다.
 
-    loss = loss_fn(y_pred.view(-1), y_true.view(-1))
-    loss.backward()
-    optimizer.step()
-    print(loss.item())
+    loss = loss_fn(y_pred.view(-1), y_true.view(-1))  # 예측값과 실제값 간의 평균 제곱 오차(MSE)를 계산한다.
+    loss.backward()  # 역전파를 통해 기울기를 계산하고, 손실에 따라 모델 매개변수의 기울기를 계산한다.
+    optimizer.step()  # 옵티마이저가 계산된 기울기에 따라 모델 매개변수를 업데이트한다.
+    print(loss.item())  # 현재 에포크에서 계산된 손실 값을 출력한다.
+
+
+# 1. 모델 초기화
+#    - RNN(1, 1, 50, 2390)은 입력 크기, 출력 크기, 숨겨진 상태 크기, 시퀀스 길이를 설정한 RNN 모델을 생성한다.
+#    - 손실 함수로 평균 제곱 오차(MSE)를 사용하여 예측값과 실제값 간의 차이를 계산한다.
+#    - 확률적 경사 하강법(SGD) 옵티마이저를 사용하여, 학습률 lr=0.005로 모델의 매개변수를 업데이트한다.
+# 2. 학습 과정
+#    - 100 에포크 동안 학습을 진행하며, 매번 모델의 기울기 및 옵티마이저의 기울기를 초기화한다.
+#    - model.init_hidden()을 통해 RNN의 숨겨진 상태를 초기화하고, 입력 시퀀스 X에 대해 반복하며 예측을 수행한다.
+#    - 각 시퀀스 x에 대해 모델은 예측값 y_pred와 업데이트된 숨겨진 상태 hidden을 반환한다. 이 숨겨진 상태는 다음 시퀀스의 예측에 사용된다.
+#    - 예측값과 실제값 간의 **손실(loss)**을 계산한 후, 역전파를 통해 기울기를 계산하고, 옵티마이저가 모델의 매개변수를 업데이트한다.
+# 3. 손실 출력
+#    - 각 에포크의 손실 값을 출력하여 학습이 진행되면서 모델이 얼마나 개선되고 있는지 확인할 수 있다.
