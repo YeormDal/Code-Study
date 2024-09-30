@@ -34,3 +34,5 @@ plt.plot(y, label='actual value')  # 실제 값을 플롯한다.
 plt.plot(list(range(10, 2400)), list_y_pred, '*', label='predicted')  # 10부터 시작하는 예측 값을 플롯한다.
 plt.xlim(0, 40)  # x축의 범위를 0에서 40까지로 설정한다.
 plt.legend()  # 범례를 추가하여 라벨을 표시한다.
+
+# 주어진 시퀀스 데이터에서 모델을 통해 미래 시점을 예측하고, 이를 시각화하는 과정을 포함한다.
